@@ -1,2 +1,6 @@
 
 .DS_Store
+RecipeServer/privatekey
+RecipeServer/vapor
+RecipeServer/vapor private key
+RecipeServer/vapor.pub
