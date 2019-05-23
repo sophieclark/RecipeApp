@@ -4,3 +4,8 @@ RecipeServer/privatekey
 RecipeServer/vapor
 RecipeServer/vapor private key
 RecipeServer/vapor.pub
+RecipeApp/Podfile.lock
+RecipeApp/Pods/*
+RecipeApp/RecipeApp.xcworkspace/xcuserdata/*
+RecipeApp/RecipeApp.xcworkspace/contents.xcworkspacedata
+RecipeApp/RecipeApp.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
