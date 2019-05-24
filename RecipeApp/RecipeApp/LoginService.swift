@@ -15,7 +15,12 @@ struct LoginService {
   let client = HttpClient()
   func login(with email: String, password: String) -> Observable<UserAuthenticated> {
     let loginUrl = url.appendingPathComponent("/login")
-    return client.request(type: .post, url: loginUrl, object: Credentials(username: email, password: password), headers: ["content-type":"application/json"])
+    let credentialString = "\(email):\(password)"
+    let encodedString = credentialString.data(using: .utf8)
+    guard let base64String = encodedString?.base64EncodedString() else {
+      return Observable.error(HttpError.internalError(reason: "Couldn't encode credentials"))
+    }
+    return client.request(type: .post, url: loginUrl, headers: ["Authorization":"Basic \(base64String)","content-type":"application/json"])
   }
   
   func getUserDetails(with authenticatedUser: UserAuthenticated) -> Observable<User> {

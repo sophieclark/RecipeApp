@@ -11,6 +11,7 @@ import RxSwift
 
 enum HttpError: Error {
   case invalidContract
+  case internalError(reason: String)
 }
 
 enum RequestType: String {
@@ -23,7 +24,7 @@ enum RequestType: String {
 final class HttpClient {
   let session = URLSession.shared
   
-  func request<T: Codable, U: Codable>(type: RequestType, url: URL, object: T?, headers: [String: String]) -> Observable<U> {
+  func request<T: Encodable, U: Decodable>(type: RequestType, url: URL, object: T?, headers: [String: String]) -> Observable<U> {
     var request = URLRequest(url: url)
     request.httpMethod = type.rawValue
     
@@ -52,7 +53,7 @@ final class HttpClient {
     }
   }
   
-  func request<U: Codable>(type: RequestType, url: URL, headers: [String: String]) -> Observable<U> {
+  func request<U: Decodable>(type: RequestType, url: URL, headers: [String: String]) -> Observable<U> {
     var request = URLRequest(url: url)
     request.httpMethod = type.rawValue
     request.allHTTPHeaderFields = headers

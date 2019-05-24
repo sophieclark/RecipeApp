@@ -7,17 +7,52 @@
 //
 
 import Foundation
+import Realm
+import RealmSwift
 
-final class UserAuthenticated: Codable {
-    var id: String
-    var token: String
-    var userID: String
-    
-    init(id: String, token: String, userID: String) {
-      self.id = id
-      self.token = token
-      self.userID = userID
-    }
+final class UserAuthenticated: Object, Decodable  {
+  @objc dynamic var id: String = UUID().uuidString
+  @objc dynamic var token: String = ""
+  @objc dynamic var userID: String = UUID().uuidString
+  
+  enum CodingKeys: CodingKey {
+    case id, token, userID
+  }
+  
+  override static func primaryKey() -> String? {
+    return "id"
+  }
+  
+  convenience init(id: UUID, token: String, userID: UUID) {
+    self.init()
+    self.id = id.uuidString
+    self.token = token
+    self.userID = userID.uuidString
+  }
+  
+  convenience init(from decoder: Decoder) throws {
+    self.init()
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let idUUID = try container.decode(UUID.self, forKey: .id)
+    id = idUUID.uuidString
+    token = try container.decode(String.self, forKey: .token)
+    let userIDUUID = try container.decode(UUID.self, forKey: .userID)
+    userID = userIDUUID.uuidString
+  }
+  
+  required init() {
+    super.init()
+  }
+  
+  required init(realm: RLMRealm, schema: RLMObjectSchema) {
+    super.init(realm: realm, schema: schema)
+  }
+  
+  required init(value: Any, schema: RLMSchema) {
+    super.init(value: value, schema: schema)
+  }
+  
+  
 }
 
 final class User: Codable {
